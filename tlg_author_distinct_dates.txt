@@ -1,0 +1,189 @@
+hgdb=> select distinct recorded_date from authors where universalid ~* '^gr' order by recorded_date;
+
+    recorded_date
+----------------------
+ 1 B.C.
+ 1 B.C.?
+ 1 B.C.–A.D. 1
+ 1 B.C.–A.D. 1?
+ 1 B.C.／A.D. 1
+ 1 B.C.／A.D. 1?
+ 1 B.C.／A.D. 4?
+ 2 B.C.
+ 2 B.C.?
+ 2 B.C.–A.D. 4
+ 2 B.C.／A.D. 2
+ 2 B.C.／A.D. 2?
+ 2 B.C.／A.D. 3
+ 2–1 B.C.
+ 2–1 B.C.?
+ 2／1 B.C.
+ 2／1 B.C.?
+ 3 B.C.
+ 3 B.C.?
+ 3 B.C.?／A.D. 1
+ 3 B.C.／A.D. 1
+ 3 B.C.／A.D. 2
+ 3–2 B.C.
+ 3–2 B.C.?
+ 3／1 B.C.
+ 3／2 B.C.
+ 3／2 B.C.?
+ 4 B.C.
+ 4 B.C.?
+ 4 B.C.／A.D. 1
+ 4 B.C.／A.D. 2
+ 4?／2 B.C.
+ 4–2 B.C.
+ 4–3 B.C.
+ 4–3 B.C.?
+ 4／1 B.C.
+ 4／1 B.C.?
+ 4／2 B.C.
+ 4／2 B.C.?
+ 4／3 B.C.
+ 4／3 B.C.?
+ 5 B.C.
+ 5 B.C.?
+ 5–4 B.C.
+ 5–4 B.C.?
+ 5／3 B.C.
+ 5／3 B.C.?
+ 5／4 B.C.
+ 5／4 B.C.?
+ 6 B.C.
+ 6 B.C.?
+ 6–5 B.C.
+ 6／5 B.C.
+ 7 B.C.
+ 7–6 B.C.
+ 7／6 B.C.
+ 7／6 B.C.?
+ 8 B.C.
+ 8–6 B.C.
+ 8／6 B.C.
+ 8／6 B.C.?
+ 8／7 B.C.
+ 8／7 B.C.?
+ A.D. 1
+ A.D. 10
+ A.D. 10／15
+ A.D. 11
+ A.D. 11–12
+ A.D. 12
+ A.D. 12?
+ A.D. 12–13
+ A.D. 13
+ A.D. 13–14
+ A.D. 14
+ A.D. 14–15
+ A.D. 15
+ A.D. 15–16
+ A.D. 1?
+ A.D. 1?／6
+ A.D. 1–2
+ A.D. 1–2?
+ A.D. 1–7
+ A.D. 1／2
+ A.D. 1／2?
+ A.D. 1／3
+ A.D. 2
+ A.D. 2?
+ A.D. 2?／4
+ A.D. 2–3
+ A.D. 2–3?
+ A.D. 2／3
+ A.D. 2／3?
+ A.D. 2／4
+ A.D. 2／4?
+ A.D. 3
+ A.D. 3?
+ A.D. 3–4
+ A.D. 3／10
+ A.D. 3／4
+ A.D. 3／4?
+ A.D. 3／5
+ A.D. 4
+ A.D. 4?
+ A.D. 4–5
+ A.D. 4–5?
+ A.D. 4／5
+ A.D. 4／5?
+ A.D. 4／6
+ A.D. 4／6?
+ A.D. 5
+ A.D. 5?
+ A.D. 5–6
+ A.D. 5–6?
+ A.D. 5／10
+ A.D. 5／6
+ A.D. 5／6?
+ A.D. 5／7
+ A.D. 6
+ A.D. 6?
+ A.D. 6–10
+ A.D. 6–7
+ A.D. 6／13
+ A.D. 6／7
+ A.D. 7
+ A.D. 7?
+ A.D. 7–8
+ A.D. 7／8
+ A.D. 7／9
+ A.D. 8
+ A.D. 8–9
+ A.D. 8–9?
+ A.D. 8／10
+ A.D. 9
+ A.D. 9?
+ A.D. 9–10
+ A.D. 9／10
+ Incertum
+ Varia
+ a. 1 B.C.
+ a. 1 B.C.?
+ a. 2 B.C.
+ a. 2 B.C.?
+ a. 3 B.C.
+ a. 3 B.C.?
+ a. 4 B.C.
+ a. 4 B.C.?
+ a. 5 B.C.
+ a. 6 B.C.
+ a. A.D. 1
+ a. A.D. 10
+ a. A.D. 11
+ a. A.D. 12
+ a. A.D. 14
+ a. A.D. 14／15
+ a. A.D. 15
+ a. A.D. 1?
+ a. A.D. 1／2
+ a. A.D. 2
+ a. A.D. 2／3
+ a. A.D. 3
+ a. A.D. 3?
+ a. A.D. 4
+ a. A.D. 5
+ a. A.D. 5?
+ a. A.D. 8
+ p. 1 B.C.
+ p. 1 B.C.?
+ p. 2 B.C.
+ p. 3 B.C.
+ p. 4 B.C.
+ p. 4 B.C.?
+ p. 4 B.C.／a. A.D. 2
+ p. 5 B.C.
+ p. 7 B.C.
+ p. A.D. 1
+ p. A.D. 10
+ p. A.D. 2
+ p. A.D. 3
+ p. A.D. 4
+ p. A.D. 5
+ p. A.D. 6
+ p. A.D. 7
+ p. A.D. 9／10
+(183 rows)
+
