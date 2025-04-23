@@ -9,3 +9,4 @@ turn a variety of date strings into int values
 5. `VI-VII` --> 600
 6. `VII?-med VIa` --> -600
 7. `VIII bc?` --> -750
+8. `c.63／2-51／0 bc` --> -57

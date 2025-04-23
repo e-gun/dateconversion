@@ -2,7 +2,8 @@ package main
 
 import "fmt"
 
-func pickbasicparser(fp FingerPrint) FingerPrint {
+func pickandrunparser(fp FingerPrint) FingerPrint {
+	// order of the tests matters
 	if fp.HasTwoArabic && fp.HasOneSpan && (fp.Has2dArabic || fp.Has3dArabic || fp.Has4Arabic) {
 		return twoarabicsimple(fp)
 	}
@@ -18,8 +19,23 @@ func pickbasicparser(fp FingerPrint) FingerPrint {
 	if fp.HasTwoRoman && fp.HasOneSpan {
 		return twoaromancenturies(fp)
 	}
+	if fp.Has1dArabic && !fp.HasOneSpan {
+		// more dangerous, but the way to do 'c 5p
+		return onearabiccentury(fp)
+	}
 	if fp.HasOneRoman {
 		return oneromancentury(fp)
+	}
+
+	// now we are in the zone where recursive calls might be made; look out for infinite loops
+	if fp.HasSlashDate {
+		return slashdated(fp)
+	}
+	if fp.HasOR {
+		return eitherordate(fp)
+	}
+	if fp.HasBracket {
+		return bracketdate(fp)
 	}
 
 	// desperate people should try a lookup: we might have "byzantinisch", vel sim

@@ -2,6 +2,7 @@ package main
 
 import (
 	"regexp"
+	"strings"
 )
 
 var (
@@ -24,14 +25,21 @@ var (
 	hasend         = regexp.MustCompile(`(late|end)`)
 	hasthird       = regexp.MustCompile(`Drittel`)
 	hasquarter     = regexp.MustCompile(`Viertel`)
-	hasth          = regexp.MustCompile(`(\dth|2nd)`)
+	hasth          = regexp.MustCompile(`(\dth|2nd|1st|3rd)`)
 	hasonespan     = regexp.MustCompile(`[\-／]`)
 	hastwospans    = regexp.MustCompile(`[\-／][^\-／][\-／]`)
 	hasbefore      = regexp.MustCompile(`(before|bef\.)`)
 	hasafter       = regexp.MustCompile(`(^p |after|aft\.)`)
+	hasslashdate1  = regexp.MustCompile(`(\d+)／\d(\D)`) // a year like 234/5 *not* a range/span
+	hasor          = regexp.MustCompile(`(.*)( (or|oder|od\.) \d.*\s)`)
+	hasorlike      = regexp.MustCompile(`(.*)( or \d.*\s)`)
+	hasbracket     = regexp.MustCompile(`\[.*?]`)
+	hasaet         = regexp.MustCompile(`aet`)
 )
 
 func TakeFingerprint(text string) FingerPrint {
+	text = strings.ReplaceAll(text, "<1", "")
+	text = strings.ReplaceAll(text, ">1", "")
 	fp := FingerPrint{
 		OrigDateString: text,
 		Calculated:     9999,
@@ -93,6 +101,16 @@ func TakeFingerprint(text string) FingerPrint {
 	if hasafter.MatchString(text) {
 		fp.HasPost = true
 	}
+	if hasor.MatchString(text) {
+		fp.HasOR = true
+	}
+	if hasslashdate1.MatchString(text) {
+		fp.HasSlashDate = true
+	}
+	if hasbracket.MatchString(text) {
+		fp.HasBracket = true
+	}
 
+	fp.Rationalize()
 	return fp
 }

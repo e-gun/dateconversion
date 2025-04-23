@@ -10,7 +10,8 @@ import (
 var (
 	stripalmostallstrings = regexp.MustCompile(`[^\d\-／\s]`)
 	swapspanner           = regexp.MustCompile(`[\-／]`)
-	stripforromans        = regexp.MustCompile(`[^IVX\-／\s]`)
+	stripforromans1       = regexp.MustCompile(`[^IVX\-／\s]`)
+	stripforromans0       = regexp.MustCompile(`[^IVX\s]`)
 )
 
 // onearabicsimple: `101 bc` --> -101
@@ -121,7 +122,7 @@ func onearabiccentury(fp FingerPrint) FingerPrint {
 
 // twoaromancenturies -  `7th-9th ac` --> 800
 func twoaromancenturies(fp FingerPrint) FingerPrint {
-	cleaned := stripforromans.ReplaceAllString(fp.OrigDateString, "")
+	cleaned := stripforromans1.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = swapspanner.ReplaceAllString(cleaned, " ")
 	cleaned = strings.ReplaceAll(cleaned, "  ", " ")
 	halves := strings.Split(strings.TrimSpace(cleaned), " ")
@@ -155,7 +156,7 @@ func twoaromancenturies(fp FingerPrint) FingerPrint {
 
 // oneromancentury - `VIII bc?` -->   -750
 func oneromancentury(fp FingerPrint) FingerPrint {
-	cleaned := stripforromans.ReplaceAllString(fp.OrigDateString, "")
+	cleaned := stripforromans0.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = strings.TrimSpace(cleaned)
 	d, e := romannumerals[cleaned]
 	if e != true {
@@ -174,4 +175,41 @@ func oneromancentury(fp FingerPrint) FingerPrint {
 	}
 	fp.ApplySimpleFudges()
 	return fp
+}
+
+// slashdated - `c.63／2-51／0 bc` --> -57
+func slashdated(fp FingerPrint) FingerPrint {
+	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
+	// if that "／" does not disappear, you could return
+
+	// `(\d+)／\d(\D)`
+	cleaned := hasslashdate1.ReplaceAllString(fp.OrigDateString, "$1$2")
+	// fmt.Println("slashdated", cleaned)
+
+	newfp := TakeFingerprint(cleaned)
+	newfp = pickandrunparser(newfp)
+	newfp.OrigDateString = fp.OrigDateString
+	return newfp
+}
+
+// eitherordate - `618 or 633 ac` --> 618
+func eitherordate(fp FingerPrint) FingerPrint {
+	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
+
+	// `(.*)( or \d.*\s)
+	cleaned := hasor.ReplaceAllString(fp.OrigDateString, "$1 ")
+	newfp := TakeFingerprint(cleaned)
+	newfp = pickandrunparser(newfp)
+	newfp.OrigDateString = fp.OrigDateString
+	return newfp
+}
+
+func bracketdate(fp FingerPrint) FingerPrint {
+	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
+	cleaned := hasbracket.ReplaceAllString(fp.OrigDateString, "")
+	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
+	newfp := TakeFingerprint(cleaned)
+	newfp = pickandrunparser(newfp)
+	newfp.OrigDateString = fp.OrigDateString
+	return newfp
 }

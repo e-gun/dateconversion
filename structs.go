@@ -28,6 +28,7 @@ type FingerPrint struct {
 	HasOneArabic        bool
 	HasOneRoman         bool
 	HasTH               bool
+	HasOR               bool
 	HasPaulo            bool
 	HasPost             bool
 	HasQuestion         bool
@@ -36,6 +37,8 @@ type FingerPrint struct {
 	HasThreeArabic      bool
 	HasOneSpan          bool
 	HasTwoSpans         bool
+	HasSlashDate        bool
+	HasBracket          bool
 	ParserFailed        bool
 	LacksParser         bool
 }
