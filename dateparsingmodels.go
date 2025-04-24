@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/e-gun/dateconversion/structs"
 	"regexp"
 	"strconv"
 	"strings"
@@ -9,15 +10,16 @@ import (
 
 var (
 	stripalmostallstrings = regexp.MustCompile(`[^\d\-／\s]`)
+	stripallstrings       = regexp.MustCompile(`\D`)
 	swapspanner           = regexp.MustCompile(`[\-／]`)
 	stripforromans1       = regexp.MustCompile(`[^IVX\-／\s]`)
 	stripforromans0       = regexp.MustCompile(`[^IVX\s]`)
 )
 
 // onearabicsimple: `101 bc` --> -101
-func onearabicsimple(fp FingerPrint) FingerPrint {
+func onearabicsimple(fp structs.FingerPrint) structs.FingerPrint {
 	// fmt.Println("onearabicsimple", fp.OrigDateString)
-	cleaned := stripalmostallstrings.ReplaceAllString(fp.OrigDateString, "")
+	cleaned := stripallstrings.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = strings.TrimSpace(cleaned)
 	d, e := strconv.Atoi(cleaned)
 	if e != nil {
@@ -33,7 +35,7 @@ func onearabicsimple(fp FingerPrint) FingerPrint {
 }
 
 // twoarabicsimple -  `1-50 ac` --> 25
-func twoarabicsimple(fp FingerPrint) FingerPrint {
+func twoarabicsimple(fp structs.FingerPrint) structs.FingerPrint {
 	cleaned := stripalmostallstrings.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = swapspanner.ReplaceAllString(cleaned, " ")
 	cleaned = strings.ReplaceAll(cleaned, "  ", " ")
@@ -64,7 +66,7 @@ func twoarabicsimple(fp FingerPrint) FingerPrint {
 }
 
 // twoarabiccenturies -  `7th-9th ac` --> 750
-func twoarabiccenturies(fp FingerPrint) FingerPrint {
+func twoarabiccenturies(fp structs.FingerPrint) structs.FingerPrint {
 	cleaned := stripalmostallstrings.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = swapspanner.ReplaceAllString(cleaned, " ")
 	cleaned = strings.ReplaceAll(cleaned, "  ", " ")
@@ -98,7 +100,7 @@ func twoarabiccenturies(fp FingerPrint) FingerPrint {
 }
 
 // onearabiccentury : `early 5th bc` --> -475
-func onearabiccentury(fp FingerPrint) FingerPrint {
+func onearabiccentury(fp structs.FingerPrint) structs.FingerPrint {
 	cleaned := stripalmostallstrings.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = strings.TrimSpace(cleaned)
 	d, e := strconv.Atoi(cleaned)
@@ -121,7 +123,7 @@ func onearabiccentury(fp FingerPrint) FingerPrint {
 }
 
 // twoaromancenturies -  `7th-9th ac` --> 800
-func twoaromancenturies(fp FingerPrint) FingerPrint {
+func twoaromancenturies(fp structs.FingerPrint) structs.FingerPrint {
 	cleaned := stripforromans1.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = swapspanner.ReplaceAllString(cleaned, " ")
 	cleaned = strings.ReplaceAll(cleaned, "  ", " ")
@@ -155,7 +157,7 @@ func twoaromancenturies(fp FingerPrint) FingerPrint {
 }
 
 // oneromancentury - `VIII bc?` -->   -750
-func oneromancentury(fp FingerPrint) FingerPrint {
+func oneromancentury(fp structs.FingerPrint) structs.FingerPrint {
 	cleaned := stripforromans0.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = strings.TrimSpace(cleaned)
 	d, e := romannumerals[cleaned]
@@ -178,7 +180,7 @@ func oneromancentury(fp FingerPrint) FingerPrint {
 }
 
 // slashdated - `c.63／2-51／0 bc` --> -57
-func slashdated(fp FingerPrint) FingerPrint {
+func slashdated(fp structs.FingerPrint) structs.FingerPrint {
 	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
 	// if that "／" does not disappear, you could return
 
@@ -193,7 +195,7 @@ func slashdated(fp FingerPrint) FingerPrint {
 }
 
 // eitherordate - `618 or 633 ac` --> 618
-func eitherordate(fp FingerPrint) FingerPrint {
+func eitherordate(fp structs.FingerPrint) structs.FingerPrint {
 	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
 
 	// `(.*)( or \d.*\s)
@@ -204,7 +206,8 @@ func eitherordate(fp FingerPrint) FingerPrint {
 	return newfp
 }
 
-func bracketdate(fp FingerPrint) FingerPrint {
+// bracketdate - `med Ia [K.87(14)]` --> 50
+func bracketdate(fp structs.FingerPrint) structs.FingerPrint {
 	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
 	cleaned := hasbracket.ReplaceAllString(fp.OrigDateString, "")
 	// note that there is an infinite loop possibility: pickandrunparser() is how you got here
@@ -212,4 +215,43 @@ func bracketdate(fp FingerPrint) FingerPrint {
 	newfp = pickandrunparser(newfp)
 	newfp.OrigDateString = fp.OrigDateString
 	return newfp
+}
+
+// multislashdate - 109／108／106／105 BC --> -109
+func multislashdate(fp structs.FingerPrint) structs.FingerPrint {
+	cleaned := strings.Split(fp.OrigDateString, "／")
+	cleaned[0] = stripalmostallstrings.ReplaceAllString(cleaned[0], "")
+	d, e := strconv.Atoi(cleaned[0])
+	if e != nil {
+		fmt.Printf("multislashdate parser failed '%s'\n", fp.OrigDateString)
+		fp.ParserFailed = true
+		return fp
+	}
+	fp.Calculated = d
+	fp.ApplyBCE()
+	fp.ApplySimpleFudges()
+	return fp
+}
+
+func multicommadate(fp structs.FingerPrint) structs.FingerPrint {
+	cleaned := strings.Split(fp.OrigDateString, ",")
+	cleaned[0] = stripalmostallstrings.ReplaceAllString(cleaned[0], "")
+	d, e := strconv.Atoi(cleaned[0])
+	if e != nil {
+		fmt.Printf("multicommadate parser failed '%s'\n", fp.OrigDateString)
+		fp.ParserFailed = true
+		return fp
+	}
+	fp.Calculated = d
+	fp.ApplyBCE()
+	fp.ApplySimpleFudges()
+	return fp
+}
+
+func andsigndate(fp structs.FingerPrint) structs.FingerPrint {
+	oldstr := fp.OrigDateString
+	fp.OrigDateString = strings.Split(fp.OrigDateString, "﹠")[0]
+	fp = onearabicsimple(fp)
+	fp.OrigDateString = oldstr
+	return multicommadate(fp)
 }

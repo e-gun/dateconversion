@@ -1,4 +1,4 @@
-package main
+package structs
 
 import (
 	"fmt"
@@ -38,6 +38,7 @@ type FingerPrint struct {
 	HasOneSpan          bool
 	HasTwoSpans         bool
 	HasSlashDate        bool
+	HasMultiSlashDate   bool
 	HasBracket          bool
 	ParserFailed        bool
 	LacksParser         bool

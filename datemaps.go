@@ -1,7 +1,8 @@
 package main
 
 var (
-	aetates = map[string]int{
+	prerolleddates = map[string]int{}
+	aetates        = map[string]int{
 		"Ant":                 150,
 		"August fere":         1,
 		"Ant/Aur":             160,
@@ -82,5 +83,22 @@ var (
 		"init imp":            50,
 		"init imper":          50,
 		"med Hell":            -150,
+	}
+	romannumerals = map[string]int{
+		"I":    1,
+		"II":   2,
+		"III":  3,
+		"IV":   4,
+		"V":    5,
+		"VI":   6,
+		"VII":  7,
+		"VIII": 8,
+		"IX":   9,
+		"X":    10,
+		"XI":   11,
+		"XII":  12,
+		"XIII": 13,
+		"XIV":  14,
+		"XV":   15,
 	}
 )

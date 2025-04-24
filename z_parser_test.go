@@ -37,8 +37,30 @@ func TestEitherordate(t *testing.T) {
 	fp.PrintWithCalc()
 }
 
+func TestMultislashdate(t *testing.T) {
+	d := `109／108／106／105 BC`
+	fp := TakeFingerprint(d)
+	fp = multislashdate(fp)
+	fp.PrintWithCalc()
+}
+
+func TestMulticommadate(t *testing.T) {
+	d := `114, 116, ﹠ 156 ac`
+	fp := TakeFingerprint(d)
+	fp = multicommadate(fp)
+	fp.PrintWithCalc()
+}
+
+func TestAndsigndate(t *testing.T) {
+	d := `1299 ﹠ 1344 ac`
+	fp := TakeFingerprint(d)
+	fp = andsigndate(fp)
+	fp.PrintWithCalc()
+}
+
 func TestPickandrunparser(t *testing.T) {
-	d := `c.10／9-3／2`
+	//d := `1 BC／AD 1`
+	d := `109／108／106／105 BC`
 	fp := TakeFingerprint(d)
 	fp = pickandrunparser(fp)
 	fp.PrintWithCalc()

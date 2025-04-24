@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/e-gun/dateconversion/structs"
 	"log"
 	"os"
 	"strings"
@@ -32,7 +33,7 @@ func testcoverage() {
 	// read the file line by line using scanner
 	scanner := bufio.NewScanner(f)
 
-	var prints []FingerPrint
+	var prints []structs.FingerPrint
 	for scanner.Scan() {
 		// do something with a line
 		txt := scanner.Text()
@@ -50,7 +51,7 @@ func testcoverage() {
 
 	badcount := 0
 	lacking := 0
-	var failures []FingerPrint
+	var failures []structs.FingerPrint
 	for _, fp := range prints {
 		if fp.LacksParser {
 			lacking++

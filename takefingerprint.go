@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/e-gun/dateconversion/structs"
 	"regexp"
 	"strings"
 )
@@ -30,17 +31,17 @@ var (
 	hastwospans    = regexp.MustCompile(`[\-／][^\-／][\-／]`)
 	hasbefore      = regexp.MustCompile(`(before|bef\.)`)
 	hasafter       = regexp.MustCompile(`(^p |after|aft\.)`)
-	hasslashdate1  = regexp.MustCompile(`(\d+)／\d(\D)`) // a year like 234/5 *not* a range/span
-	hasor          = regexp.MustCompile(`(.*)( (or|oder|od\.) \d.*\s)`)
+	hasslashdate1  = regexp.MustCompile(`(\d+)／\d(\D)`)  // a year like 234/5 *not* a range/span
+	hasor          = regexp.MustCompile(`(\d+)( or .*)`) // dangerous because we will end up discarding the rest
 	hasorlike      = regexp.MustCompile(`(.*)( or \d.*\s)`)
 	hasbracket     = regexp.MustCompile(`\[.*?]`)
 	hasaet         = regexp.MustCompile(`aet`)
 )
 
-func TakeFingerprint(text string) FingerPrint {
+func TakeFingerprint(text string) structs.FingerPrint {
 	text = strings.ReplaceAll(text, "<1", "")
 	text = strings.ReplaceAll(text, ">1", "")
-	fp := FingerPrint{
+	fp := structs.FingerPrint{
 		OrigDateString: text,
 		Calculated:     9999,
 	}
@@ -109,6 +110,9 @@ func TakeFingerprint(text string) FingerPrint {
 	}
 	if hasbracket.MatchString(text) {
 		fp.HasBracket = true
+	}
+	if strings.Count(text, "／") > 1 {
+		fp.HasMultiSlashDate = true
 	}
 
 	fp.Rationalize()
