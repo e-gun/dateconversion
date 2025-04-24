@@ -14,7 +14,7 @@ func pickandrunparser(fp structs.FingerPrint) structs.FingerPrint {
 	}
 
 	if fp.HasTwoArabic && fp.HasOneSpan && (fp.Has2dArabic || fp.Has3dArabic || fp.Has4Arabic) && fp.HasCE && fp.HasBCE {
-		// twoarabiccomplex -
+		// twoarabiccomplex - `30 BC-AD 68` --> 49
 		return twoarabiccomplex(fp)
 	}
 
@@ -57,6 +57,11 @@ func pickandrunparser(fp structs.FingerPrint) structs.FingerPrint {
 	if len(strings.Split(fp.OrigDateString, "﹠")) > 1 {
 		// andsigndate - 1299 ﹠ 1344 ac --> 1299
 		return andsigndate(fp)
+	}
+	// this seems like it should be a late test...
+	if fp.HasTwoArabic && fp.HasOneSpan && fp.Has1dArabic && !fp.HasOR {
+		// `6-5 BC` --> -500
+		return twoarabiccenturies(fp)
 	}
 
 	// now we are in the zone where recursive calls might be made; look out for infinite loops

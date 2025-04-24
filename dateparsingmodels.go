@@ -66,11 +66,11 @@ func twoarabicsimple(fp structs.FingerPrint) structs.FingerPrint {
 	return fp
 }
 
-// twoarabiccomplex
+// twoarabiccomplex - `30 BC-AD 68` --> 49
 func twoarabiccomplex(fp structs.FingerPrint) structs.FingerPrint {
 	cleaned := stripalmostallstrings.ReplaceAllString(fp.OrigDateString, "")
 	cleaned = swapspanner.ReplaceAllString(cleaned, " ")
-	cleaned = strings.ReplaceAll(cleaned, "  ", " ")
+	cleaned = nodoublespace.ReplaceAllString(cleaned, "")
 	halves := strings.Split(strings.TrimSpace(cleaned), " ")
 	if len(halves) != 2 {
 		fmt.Printf("twoarabiccomplex parser failed '%s' & '%s'\n", fp.OrigDateString, cleaned)
