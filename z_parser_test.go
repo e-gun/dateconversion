@@ -59,8 +59,8 @@ func TestAndsigndate(t *testing.T) {
 }
 
 func TestPickandrunparser(t *testing.T) {
-	//d := `1 BC／AD 1`
-	d := `109／108／106／105 BC`
+	d := `30 BC-AD 68`
+	// d := `109／108／106／105 BC`
 	fp := TakeFingerprint(d)
 	fp = pickandrunparser(fp)
 	fp.PrintWithCalc()

@@ -87,6 +87,13 @@ func TakeFingerprint(text string) structs.FingerPrint {
 	if hastwospans.MatchString(text) {
 		fp.HasTwoSpans = true
 	}
+	//if hasthreespans.MatchString(text) {
+	//	fp.HasThreeSpans = true
+	//}
+	//if hasfourspans.MatchString(text) {
+	//	fp.HasFourSpans = true
+	//}
+
 	if hasth.MatchString(text) {
 		fp.HasTH = true
 	}
@@ -102,7 +109,7 @@ func TakeFingerprint(text string) structs.FingerPrint {
 	if hasafter.MatchString(text) {
 		fp.HasPost = true
 	}
-	if hasor.MatchString(text) {
+	if hasor.MatchString(text) || hasorlike.MatchString(text) {
 		fp.HasOR = true
 	}
 	if hasslashdate1.MatchString(text) {
@@ -114,7 +121,10 @@ func TakeFingerprint(text string) structs.FingerPrint {
 	if strings.Count(text, "／") > 1 {
 		fp.HasMultiSlashDate = true
 	}
-
+	if strings.Count(text, "／") > 0 && strings.Count(text, "-") > 1 {
+		// 245-244／220-219 BC
+		fp.HasMixedSpans = true
+	}
 	fp.Rationalize()
 	return fp
 }

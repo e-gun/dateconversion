@@ -37,6 +37,9 @@ type FingerPrint struct {
 	HasThreeArabic      bool
 	HasOneSpan          bool
 	HasTwoSpans         bool
+	HasThreeSpans       bool
+	HasFourSpans        bool
+	HasMixedSpans       bool
 	HasSlashDate        bool
 	HasMultiSlashDate   bool
 	HasBracket          bool
@@ -80,6 +83,15 @@ func (fp *FingerPrint) Rationalize() {
 	}
 
 	// span counter
+	//if fp.HasFourSpans {
+	//	fp.HasThreeSpans = false
+	//	fp.HasTwoSpans = false
+	//	fp.HasOneSpan = false
+	//}
+	//if fp.HasThreeSpans {
+	//	fp.HasTwoSpans = false
+	//	fp.HasOneSpan = false
+	//}
 	if fp.HasTwoSpans {
 		fp.HasOneSpan = false
 	}
@@ -139,7 +151,7 @@ func (fp FingerPrint) PrintWithCalc() {
 			fmt.Println("Parser Failed")
 		}
 	} else {
-		fmt.Printf("%s", fp.OrigDateString)
-		fmt.Printf(" -->\t%d\n", fp.Calculated)
+		fmt.Printf("`%s`", fp.OrigDateString)
+		fmt.Printf(" --> %d\n", fp.Calculated)
 	}
 }
